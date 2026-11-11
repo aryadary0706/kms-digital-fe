@@ -150,7 +150,7 @@ export default async function ChildDetailPage({
       <div className="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto p-6 bg-gradient-to-t from-background via-background/90 to-transparent pb-8 pt-12 pointer-events-none z-30">
         <DownloadPdfButton 
           childId={id} 
-          //chartId="growth-chart-container"
+          chartId="growth-chart-container"
           childInfo={{
             nama: mappedData.nama,
             jk: mappedData.jk,

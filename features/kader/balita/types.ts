@@ -34,6 +34,7 @@ export type BalitaDetail = {
   nama: string;
   jk: string;
   usia: string;
+  status?: ChildStatus;
   stats: {
     berat: number | string;
     tinggi: number | string;

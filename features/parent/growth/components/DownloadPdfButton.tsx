@@ -3,16 +3,19 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toPng } from "html-to-image";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function DownloadPdfButton({
   childId,
+  chartId,
   childInfo,
   riwayat,
   intervention,
 }: {
   childId: string;
+  chartId?: string;
   childInfo: {
     nama: string;
     jk: string;
@@ -106,6 +109,30 @@ export default function DownloadPdfButton({
       const finalYInfo = (pdf as any).lastAutoTable.finalY + 12;
 
       let tableStartY = finalYInfo;
+
+      // Render grafik pertumbuhan sebagai gambar jika tersedia
+      const chartEl = chartId ? document.getElementById(chartId) : null;
+      if (chartEl) {
+        const dataUrl = await toPng(chartEl, {
+          pixelRatio: 2,
+          backgroundColor: "#ffffff",
+        });
+        const imgProps = pdf.getImageProperties(dataUrl);
+        const imgWidth = pageWidth - 30;
+        const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+        if (finalYInfo + imgHeight + 8 > pdf.internal.pageSize.getHeight() - 15) {
+          pdf.addPage();
+          tableStartY = 20;
+        }
+
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(15, 23, 42);
+        pdf.text("Grafik Pertumbuhan", 15, tableStartY);
+        pdf.addImage(dataUrl, "PNG", 15, tableStartY + 4, imgWidth, imgHeight);
+        tableStartY += imgHeight + 16;
+      }
 
       // Check if we need a new page for the table
       if (tableStartY > pdf.internal.pageSize.getHeight() - 40) {

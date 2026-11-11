@@ -158,7 +158,7 @@ export default function DetailBalitaFeed({
         margin: { left: 15 },
       });
 
-      let finalYInfo = (pdf as any).lastAutoTable.finalY + 12;
+      const finalYInfo = (pdf as any).lastAutoTable.finalY + 12;
 
       let tableStartY = finalYInfo;
 
